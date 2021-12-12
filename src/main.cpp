@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
     {
         const int chunksize = TOTAL_MAP_DIM / pow(2, z);
         const int num_chunks = TOTAL_MAP_DIM / chunksize;
-        const int total = num_chunks * num_chunks;
+        const float total = num_chunks * num_chunks;
         int progress = 0;
 
         #pragma omp parallel for collapse(2)
@@ -134,7 +134,7 @@ int main(int argc, char* argv[])
                     std::cout
                         << "Working layer " << z << " of " << zoom << "...\t"
                         << progress << "/" << total
-                        << " (" << FORMAT_FLOAT(progress / total * 100.0f) << "%)\t\r"
+                        << " (" << FORMAT_FLOAT(progress / total * 100) << "%)\t\r"
                         << std::flush;
                 }
 
