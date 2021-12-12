@@ -130,6 +130,7 @@ int main(int argc, char* argv[])
                 {
                     ++progress;
                     std::cout << progress << "/" << total 
+                              << " (" << progress / total * 100 << "%)"
                               << "\t(Layer " << z << " of " << zoom << ")"
                               << std::endl;
                 }
