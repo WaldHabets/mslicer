@@ -14,7 +14,7 @@
 #define EXPORT_DIM 500
 #define PNG ".png "
 #define JPG ".jpg "
-#define NO_OUTPUT " > /dev/null"
+#define NO_OUTPUT " >/dev/null 2>/dev/null"
 
 // Arguments
 #define ARG_INPUT_FILE 1
