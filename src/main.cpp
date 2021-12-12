@@ -9,6 +9,7 @@
 #include <string>
 #include <errno.h>
 #include <string.h>
+#include <iomanip>
 
 #define TOTAL_MAP_DIM 7424
 #define EXPORT_DIM 500
@@ -32,6 +33,7 @@
 #define Z_DIR(z) "/" << z << "/" 
 #define REMOVE_PNG(FILE) "rm " << FILE << PNG
 #define CONVERT_TO_JPG(FILE) "convert " << FILE << PNG << FILE << JPG
+#define FORMAT_FLOAT(FLOAT) std::fixed << std::setprecision(2) << FLOAT
 
 struct stat st = {0};
 
@@ -130,7 +132,7 @@ int main(int argc, char* argv[])
                 {
                     ++progress;
                     std::cout << progress << "/" << total 
-                              << " (" << progress / total * 100 << "%)"
+                              << " (" << FORMAT_FLOAT(progress / total * 100) << "%)"
                               << "\t(Layer " << z << " of " << zoom << ")"
                               << std::endl;
                 }
