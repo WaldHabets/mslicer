@@ -122,21 +122,21 @@ int main(int argc, char* argv[])
         const int total = num_chunks * num_chunks;
         int progress = 0;
 
-        #pragma omp parallel for collapse(2) shared(progress)
+        #pragma omp parallel for collapse(2)
         for (int y = 0; y < num_chunks; ++y)
         {
 
             for (int x = 0; x < num_chunks; ++x)
-            {
+            { 
                 #pragma omp critical
                 {
                     ++progress;
-                    std::cout << progress << "/" << total 
-                              << " (" << FORMAT_FLOAT(progress / total * 100) << "%)"
-                              << "\t(Layer " << z << " of " << zoom << ")"
-                              << std::endl;
+                    std::cout
+                        << "Working layer " << z << " of " << zoom << "...\t"
+                        << progress << "/" << total
+                        << " (" << FORMAT_FLOAT(progress / total * 100.0f) << "%)\t\r"
+                        << std::flush;
                 }
-                
 
                 std::stringstream path_builder;
                 path_builder << OUTPUT_DIR << Z_DIR(z) << x << "_" << y; // extension gets appended at later stage
@@ -162,8 +162,11 @@ int main(int argc, char* argv[])
                 // convert and remove
                 convert_to_jpg(FILE);
             }
-
         }
+
+        std::cout
+            << "Working layer " << z << " of " << zoom << "...\tDone                         "
+            << std::endl;
     }
 
     create_tarball_of(OUTPUT_DIR);
