@@ -10,6 +10,7 @@
 #include <errno.h>
 #include <string.h>
 #include <iomanip>
+#include "argparse.hpp"
 
 #define TOTAL_MAP_DIM 7424
 #define EXPORT_DIM 500
@@ -18,8 +19,6 @@
 #define NO_OUTPUT " >/dev/null 2>/dev/null"
 
 // Arguments
-#define ARG_INPUT_FILE 1
-#define ARG_OUTPUT_DIR 2
 #define ARG_MAX_LAYERS 3
 
 // Inkscape
@@ -58,31 +57,10 @@ void create_tarball_of(const std::string& dir) {
 int main(int argc, char* argv[])
 {
 
-    if (argc != 4) {
-        std::cout << "export <input_file> <output_dir> <layers>" << std::endl;
-        exit(0);
-    }
+    Options options = parse_args(argc, argv);
 
-    int zoom = 0;
-
-    try {
-        zoom = std::stoi(argv[ARG_MAX_LAYERS]);
-    } catch(std::invalid_argument) {
-        std::cout << "Argument for <layers> cannot be converted to an integer" << std::endl;
-        exit(0);
-    } catch(std::out_of_range) {
-        std::cout << "Argument for <layers> is to large." << std::endl;
-        exit(0);
-    }
-
-
-    if (zoom < 0) {
-	    std::cout << "Invalid zoom" << std::endl;
-	    exit(0);
-    }
-
-    const std::string OUTPUT_DIR = argv[ARG_OUTPUT_DIR];
-    const std::string INPUT_FILE = argv[ARG_INPUT_FILE];
+    const std::string OUTPUT_DIR = options.output_dir;
+    const std::string INPUT_FILE = options.input_file;
 
     if (stat(OUTPUT_DIR.c_str(), &st) == -1)
     {
@@ -97,7 +75,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    for (int z = 0; z <= zoom; ++z)
+    for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
 
         std::stringstream dir;
@@ -115,7 +93,7 @@ int main(int argc, char* argv[])
         }
     }
 
-    for (int z = 0; z <= zoom; ++z)
+    for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
         const int chunksize = TOTAL_MAP_DIM / pow(2, z);
         const int num_chunks = TOTAL_MAP_DIM / chunksize;
@@ -132,7 +110,7 @@ int main(int argc, char* argv[])
                 {
                     ++progress;
                     std::cout
-                        << "Working layer " << z << " of " << zoom << "...\t"
+                        << "Working layer " << z << " of " << options.max_zoom << "...\t"
                         << progress << "/" << total
                         << " (" << FORMAT_FLOAT(progress / total * 100) << "%)\t\r"
                         << std::flush;
@@ -165,7 +143,7 @@ int main(int argc, char* argv[])
         }
 
         std::cout
-            << "Working layer " << z << " of " << zoom << "...\tDone                         "
+            << "Working layer " << z << " of " << options.max_zoom << "...\tDone                         "
             << std::endl;
     }
 
