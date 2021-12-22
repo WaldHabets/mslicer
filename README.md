@@ -3,6 +3,13 @@ Tool to export inkscape vector drawings to tiled images compatible with Leaflet.
 Uses OpenMP for multithreaded support.
 
 # Dependencies
+List of program dependencies
+
+## Libraries
+- OpenMP
+- Boost
+
+## External programs
 - Inkscape
 - Convert
 
