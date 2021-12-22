@@ -14,7 +14,7 @@ $(info ${OBJS})
 LIBS=-fopenmp -lboost_program_options
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS) $(OBJ_DIR)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
 $(DIST)/export: $(OBJS) $(DIST)
 	$(CC) -o $@ $(OBJS) $(LIBS)
