@@ -25,6 +25,8 @@ $(DIST):
 $(OBJ_DIR):
 	mkdir -p $@
 
+.PHONY: clean
+
 clean: $(OBJ_DIR)
 	rm -rf $<
 

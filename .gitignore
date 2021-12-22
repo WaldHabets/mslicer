@@ -33,5 +33,6 @@
 
 # Folders
 /dist/
+/obj/
 /data/
 .vscode/
