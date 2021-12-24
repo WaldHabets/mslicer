@@ -24,6 +24,7 @@ init_options()
         (ARG_HELP, "Show help options")
         (ARG_MAX_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MAX_ZOOM), "The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom.")
         (ARG_MIN_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MIN_ZOOM), "The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom.")
+        (ARG_TILE_DIM, ARG_VALUE_INT->default_value(DEFAULT_TILE_DIM), "The dimension of the generated tiles")
         (ARG_INPUT_FILE, ARG_VALUE_STR->required(), "Input file in .svg format")
         (ARG_OUTPUT_DIR, ARG_VALUE_STR->required(), "Name of the target directory where output should be stored")
         ;
@@ -59,6 +60,7 @@ Options populate_options(const po::variables_map* vm) {
 
     options.max_zoom = (*vm)[get_long_option(ARG_MAX_ZOOM)].as<int>();
     options.min_zoom = (*vm)[get_long_option(ARG_MIN_ZOOM)].as<int>();
+    options.tile_dim = (*vm)[get_long_option(ARG_TILE_DIM)].as<int>();
     options.input_file = (*vm)[get_long_option(ARG_INPUT_FILE)].as<std::string>();
     options.output_dir = (*vm)[get_long_option(ARG_OUTPUT_DIR)].as<std::string>();
 

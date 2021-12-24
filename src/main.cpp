@@ -13,7 +13,6 @@
 #include "argparse.hpp"
 
 #define TOTAL_MAP_DIM 7424
-#define EXPORT_DIM 500
 #define PNG ".png "
 #define JPG ".jpg "
 #define NO_OUTPUT " >/dev/null 2>/dev/null"
@@ -24,8 +23,8 @@
 // Inkscape
 #define INKSCAPE "inkscape "
 #define OPTION_AREA "--export-area="
-#define OPTION_WIDTH "--export-width=" << EXPORT_DIM << " "
-#define OPTION_HEIGHT "--export-height=" << EXPORT_DIM << " "
+#define OPTION_WIDTH(DIM) "--export-width=" << DIM << " "
+#define OPTION_HEIGHT(DIM) "--export-height=" << DIM << " "
 #define OPTION_EXPORT_TO(FILE) "--export-filename=" << FILE << PNG
 
 // Other
@@ -132,7 +131,7 @@ int main(int argc, char* argv[])
                 cmd << INKSCAPE;
                 cmd << INPUT_FILE << " ";
                 cmd << OPTION_AREA << x_origin << ":" << y_origin << ":" << x_end << ":" << y_end << " ";
-                cmd << OPTION_WIDTH << OPTION_HEIGHT << OPTION_EXPORT_TO(FILE);
+                cmd << OPTION_WIDTH(options.tile_dim) << OPTION_HEIGHT(options.tile_dim) << OPTION_EXPORT_TO(FILE);
                 cmd << NO_OUTPUT << std::endl;
 
                 execute(cmd);
