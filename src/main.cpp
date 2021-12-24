@@ -17,9 +17,6 @@
 #define JPG ".jpg "
 #define NO_OUTPUT " >/dev/null 2>/dev/null"
 
-// Arguments
-#define ARG_MAX_LAYERS 3
-
 // Inkscape
 #define INKSCAPE "inkscape "
 #define OPTION_AREA "--export-area="
@@ -53,6 +50,22 @@ void create_tarball_of(const std::string& dir) {
     execute(command);
 }
 
+/**
+ * Creates the target directory if it does not yet exists
+ * */
+void create_dir_if_missing(const std::string& dir, bool verbose = true) {
+    const char* directory = dir.c_str();
+    if (stat(directory, &st) == -1)
+    {
+        int res = mkdir(directory, S_IRWXU);
+
+        if (verbose && res != 0)
+        {
+            std::cerr << strerror(errno) << std::endl;
+        }
+    }
+}
+
 int main(int argc, char* argv[])
 {
 
@@ -61,35 +74,15 @@ int main(int argc, char* argv[])
     const std::string OUTPUT_DIR = options.output_dir;
     const std::string INPUT_FILE = options.input_file;
 
-    if (stat(OUTPUT_DIR.c_str(), &st) == -1)
-    {
-        std::cout << OUTPUT_DIR << " does not exist" << std::endl;
-        std::cout << "Creating new directory..." << std::endl;
-
-        int res = mkdir(OUTPUT_DIR.c_str(), S_IRWXU);
-
-        if (res != 0)
-        {
-            std::cout << strerror(errno) << std::endl;
-        }
-    }
+    create_dir_if_missing(OUTPUT_DIR);
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
+        std::stringstream z_dir;
 
-        std::stringstream dir;
+        z_dir << OUTPUT_DIR << Z_DIR(z);
 
-        dir << OUTPUT_DIR << Z_DIR(z);
-
-        if (stat(dir.str().c_str(), &st) == -1)
-	    {
-            int res = mkdir(dir.str().c_str(), S_IRWXU);
-
-            if (res != 0)
-            {
-                std::cout << strerror(errno) << std::endl;
-            }
-        }
+        create_dir_if_missing(z_dir.str());
     }
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
