@@ -4,6 +4,7 @@
 #include <string>
 
 #define ARG_HELP "help,?"
+#define ARG_ARCHIVE "archive,a"
 #define ARG_MAX_ZOOM "max-zoom"
 #define ARG_MIN_ZOOM "min-zoom"
 #define ARG_TILE_DIM "tile-dim"
@@ -15,6 +16,7 @@
 #define DEFAULT_TILE_DIM 512
 
 struct options {
+    bool archive;
     int min_zoom;
     int max_zoom;
     int tile_dim;

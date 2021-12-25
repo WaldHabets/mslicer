@@ -22,6 +22,7 @@ init_options()
 
     description.add_options()
         (ARG_HELP, "Show help options")
+        (ARG_ARCHIVE, "Creates a compressed archive of the output images. This optios is the same as running `tar czf` on the output dir.")
         (ARG_MAX_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MAX_ZOOM), "The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom.")
         (ARG_MIN_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MIN_ZOOM), "The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom.")
         (ARG_TILE_DIM, ARG_VALUE_INT->default_value(DEFAULT_TILE_DIM), "The dimension of the generated tiles")
@@ -58,6 +59,7 @@ bool check(const char* option, const po::variables_map* vm) {
 Options populate_options(const po::variables_map* vm) {
     Options options;
 
+    options.archive = vm->count(get_long_option(ARG_ARCHIVE)) > 0;
     options.max_zoom = (*vm)[get_long_option(ARG_MAX_ZOOM)].as<int>();
     options.min_zoom = (*vm)[get_long_option(ARG_MIN_ZOOM)].as<int>();
     options.tile_dim = (*vm)[get_long_option(ARG_TILE_DIM)].as<int>();

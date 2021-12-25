@@ -139,7 +139,8 @@ int main(int argc, char* argv[])
             << std::endl;
     }
 
-    create_tarball_of(OUTPUT_DIR);
+    if (options.archive)
+        create_tarball_of(OUTPUT_DIR);
 
     return 0;
 }
