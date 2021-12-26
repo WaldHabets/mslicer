@@ -16,7 +16,7 @@ LIBS=-fopenmp -lboost_program_options
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS) $(OBJ_DIR)
 	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
-$(DIST)/export: $(OBJS) $(DIST)
+$(DIST)/mslicer: $(OBJS) $(DIST)
 	$(CC) -o $@ $(OBJS) $(LIBS)
 
 $(DIST):
