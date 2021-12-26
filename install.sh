@@ -7,11 +7,11 @@ fi
 
 if [ "$1" == "install" ];
 then
-    sudo mkdir -p "./dist/usr/local/bin/"
-    sudo cp "./dist/mslicer" "./dist/usr/local/bin/mslicer"
+    sudo mkdir -p "/usr/local/bin/"
+    sudo cp "./dist/mslicer" "/usr/local/bin/mslicer"
 fi
 
 if [ "$1" == "remove" ];
 then
-    sudo rm -f "./dist/usr/local/bin/mslicer"
+    sudo rm -f "/usr/local/bin/mslicer"
 fi
