@@ -130,7 +130,8 @@ int main(int argc, char* argv[])
                 execute(cmd);
 
                 // convert and remove
-                convert_to_jpg(FILE);
+                if (options.format.compare("jpg"))
+                    convert_to_jpg(FILE);
             }
         }
 
