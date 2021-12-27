@@ -4,6 +4,7 @@ then
     export env $(cat .env | xargs)
 else
     echo "Error: could not load enviroment variables!"
+    exit
 fi
 
 if [ -z "$SUDO_USER" ];
