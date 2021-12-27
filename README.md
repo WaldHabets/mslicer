@@ -12,6 +12,3 @@ List of program dependencies
 ## External programs
 - Inkscape
 - Convert
-
-# Todo
-- [ ] Add choice between .png and .jpg as fileformat.
