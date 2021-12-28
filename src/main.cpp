@@ -87,16 +87,23 @@ int main(int argc, char* argv[])
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
-        const int chunksize = TOTAL_MAP_DIM / pow(2, z);
-        const int num_chunks = TOTAL_MAP_DIM / chunksize;
-        const float total = num_chunks * num_chunks;
+        // const int chunksize = TOTAL_MAP_DIM / pow(2, z);
+        // const int num_chunks = TOTAL_MAP_DIM / chunksize;
+        // const float total = num_chunks * num_chunks;
+        // int progress = 0;
+
+        const int chunksize_x = options.input_width / pow(2, z);
+        const int chunksize_y = options.input_height / pow(2, z);
+        const int num_chunks_x = options.input_width / chunksize_x;
+        const int num_chunks_y = options.input_height / chunksize_y;
+        const float total = num_chunks_x * num_chunks_y;
         int progress = 0;
 
         #pragma omp parallel for collapse(2)
-        for (int y = 0; y < num_chunks; ++y)
+        for (int y = 0; y < num_chunks_y; ++y)
         {
 
-            for (int x = 0; x < num_chunks; ++x)
+            for (int x = 0; x < num_chunks_x; ++x)
             { 
                 #pragma omp critical
                 {
@@ -113,11 +120,11 @@ int main(int argc, char* argv[])
 
                 const std::string FILE = path_builder.str();
 
-                const int x_origin = x*chunksize;
-                const int y_origin = y*chunksize;
+                const int x_origin = x*chunksize_x;
+                const int y_origin = y*chunksize_y;
 
-                const int x_end = x_origin + chunksize;
-                const int y_end = y_origin + chunksize;
+                const int x_end = x_origin + chunksize_x;
+                const int y_end = y_origin + chunksize_y;
 
                 std::stringstream cmd;
 
@@ -130,7 +137,7 @@ int main(int argc, char* argv[])
                 execute(cmd);
 
                 // convert and remove
-                if (options.format.compare("jpg"))
+                if (options.format.compare("jpg") == 0)
                     convert_to_jpg(FILE);
             }
         }

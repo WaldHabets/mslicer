@@ -12,6 +12,8 @@ namespace po = boost::program_options;
 #define ARG_VALUE_INT po::value<int>()
 #define ARG_VALUE_STR po::value<std::string>()
 
+#define ERROR_GE_0(ARGUMENT) std::cerr << "Error: " << ARGUMENT << " must be greather than or equal to 0."
+
 /**
  * Builds the options descriptions
  * */
@@ -27,6 +29,9 @@ init_options()
         (ARG_MAX_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MAX_ZOOM), "The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom.")
         (ARG_MIN_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MIN_ZOOM), "The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom.")
         (ARG_TILE_DIM, ARG_VALUE_INT->default_value(DEFAULT_TILE_DIM), "The dimension of the generated tiles")
+        (ARG_INPUT_WIDTH, ARG_VALUE_INT->default_value(DEFAULT_INPUT_DIM), "Set the width of the input image. If neither --input-width or --input-dim is set or --input-width=0, the program will attempt to derive the width from the input image.")
+        (ARG_INPUT_HEIGHT, ARG_VALUE_INT->default_value(DEFAULT_INPUT_DIM), "Set the height of the input image. If neither --input-height or --input-dim is set or --input-height=0, the program will attempt to derive the height from the input image.")
+        (ARG_INPUT_DIM, ARG_VALUE_INT, "Set the dimension of the input image: overrides --input-width and --input-height.")
         (ARG_INPUT_FILE, ARG_VALUE_STR->required(), "Input file in .svg format")
         (ARG_OUTPUT_DIR, ARG_VALUE_STR->required(), "Name of the target directory where output should be stored")
         ;
@@ -60,8 +65,16 @@ bool check(const char* option, const po::variables_map* vm) {
 Options populate_options(const po::variables_map* vm) {
     Options options;
 
+    if (check(ARG_INPUT_DIM, vm) > 0) {
+        int dim = (*vm)[get_long_option(ARG_INPUT_DIM)].as<int>();
+        options.input_width = dim;
+        options.input_height = dim;
+    } else {
+        options.input_width = (*vm)[get_long_option(ARG_INPUT_WIDTH)].as<int>();
+        options.input_height = (*vm)[get_long_option(ARG_INPUT_HEIGHT)].as<int>();
+    }
     options.archive = vm->count(get_long_option(ARG_ARCHIVE)) > 0;
-    options.format = (*vm)[get_long_option(ARG_MAX_ZOOM)].as<std::string>();
+    options.format = (*vm)[get_long_option(ARG_FORMAT)].as<std::string>();
     options.max_zoom = (*vm)[get_long_option(ARG_MAX_ZOOM)].as<int>();
     options.min_zoom = (*vm)[get_long_option(ARG_MIN_ZOOM)].as<int>();
     options.tile_dim = (*vm)[get_long_option(ARG_TILE_DIM)].as<int>();
@@ -76,12 +89,20 @@ Options populate_options(const po::variables_map* vm) {
  * @returns true if the options are valid
  * */
 bool validate_options(const Options& options) {
+    if (options.input_height < 0) {
+        ERROR_GE_0(get_long_option(ARG_INPUT_HEIGHT));
+        return false;
+    }
+    if (options.input_width < 0) {
+        ERROR_GE_0(get_long_option(ARG_INPUT_WIDTH));
+        return false;
+    }
     if (options.min_zoom < 0) {
-        std::cerr << "Error: " << get_long_option(ARG_MIN_ZOOM) << " must be greather than or equal to 0.";
+        ERROR_GE_0(get_long_option(ARG_MIN_ZOOM));
         return false;
     }
     if (options.max_zoom < 0) {
-        std::cerr << "Error: " << get_long_option(ARG_MAX_ZOOM) << " must be greather than or equal to 0.";
+        ERROR_GE_0(get_long_option(ARG_MAX_ZOOM));
         return false;
     }
     if (options.max_zoom < options.min_zoom) {
