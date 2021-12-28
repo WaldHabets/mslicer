@@ -15,13 +15,23 @@ fi
 
 TARGET="/usr/local/bin/"
 
-if [ "$1" == "install" ]; then
+install() {
     sudo mkdir -p "${TARGET}"
     sudo cp "./dist/${DIST_NAME}" "${TARGET}${DIST_NAME}"
+}
+
+if [ "$1" == "update" ]; then
+    git pull origin main
+    make
+    install
+    make clean
+elif [ "$1" == "install" ]; then
+    install
 elif [ "$1" == "remove" ]; then
-    sudo rm -f "${TARGER}${DIST_NAME}"
+    sudo rm -f "${TARGET}${DIST_NAME}"
 else
     echo "Invalid argument, use:"
+    echo "    install.sh update"
     echo "    install.sh install"
     echo "    install.sh remove"
 fi
