@@ -5,6 +5,7 @@
 
 #define ARG_HELP "help,?"
 #define ARG_ARCHIVE "archive,a"
+#define ARG_VERBOSE "verbose,v"
 #define ARG_FORMAT "format,f"
 #define ARG_MAX_ZOOM "max-zoom"
 #define ARG_MIN_ZOOM "min-zoom"
@@ -23,6 +24,7 @@
 
 struct options {
     bool archive;
+    bool verbose;
     std::string format;
     int min_zoom;
     int max_zoom;

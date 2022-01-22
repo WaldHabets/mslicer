@@ -15,7 +15,8 @@
 #define TOTAL_MAP_DIM 7424
 #define PNG ".png "
 #define JPG ".jpg "
-#define NO_OUTPUT " >/dev/null 2>/dev/null"
+#define NO_OUTPUT " >/dev/null"
+#define NO_ERROR " 2>/dev/null"
 
 // Inkscape
 #define INKSCAPE "inkscape "
@@ -39,7 +40,7 @@ void execute(const std::stringstream& command) {
 void convert_to_jpg(const std::string& file) {
     std::stringstream command;
     command << CONVERT_TO_JPG(file) << NO_OUTPUT;
-    command << " && " << REMOVE_PNG(file) << NO_OUTPUT << std::endl;
+    command << " && " << REMOVE_PNG(file) << NO_OUTPUT << NO_ERROR << std::endl;
     execute(command);
 }
 
@@ -132,7 +133,11 @@ int main(int argc, char* argv[])
                 cmd << INPUT_FILE << " ";
                 cmd << OPTION_AREA << x_origin << ":" << y_origin << ":" << x_end << ":" << y_end << " ";
                 cmd << OPTION_WIDTH(options.tile_dim) << OPTION_HEIGHT(options.tile_dim) << OPTION_EXPORT_TO(FILE);
-                cmd << NO_OUTPUT << std::endl;
+                cmd << NO_OUTPUT;
+                if (!options.verbose)
+                    cmd << NO_ERROR << std::endl;
+                else
+                    cmd << std::endl;
 
                 execute(cmd);
 
