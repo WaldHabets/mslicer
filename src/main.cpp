@@ -142,6 +142,10 @@ int main(int argc, char* argv[])
                 execute(cmd);
 
                 // convert and remove
+                // We manually convert due to a bug in inkscape trowing
+                // ** (org.inkscape.Inkscape:87826): ERROR **: 15:43:29.594: 
+                //      unhandled exception (type unknown) in signal handler
+                // when we add jpg as the file extension to --export-filename
                 if (options.format.compare("jpg") == 0)
                     convert_to_jpg(FILE);
             }
