@@ -8,15 +8,19 @@
 #define MISSING_HEIGHT_FILE "./data/mslicer/missing_height.svg"
 
 BOOST_AUTO_TEST_CASE(dims_detection_test) {
-    Dimension dim = parse_dimension(GOOD_SVG_FILE);
+    SvgDimension dim = parse_dimension(GOOD_SVG_FILE);
     BOOST_TEST(dim.width == 256);
     BOOST_TEST(dim.height == 256);
 }
 
 BOOST_AUTO_TEST_CASE(width_missing_test) {
-    BOOST_CHECK_THROW(parse_dimension(MISSING_WIDTH_FILE), MissingPropertyException);
+    const SvgDimension result = parse_dimension(MISSING_WIDTH_FILE);
+    BOOST_TEST(result.width == PROPERTY_IS_MISSING);
+    BOOST_TEST(result.height == 256);
 }
 
 BOOST_AUTO_TEST_CASE(height_missing_test) {
-    BOOST_CHECK_THROW(parse_dimension(MISSING_HEIGHT_FILE), MissingPropertyException);
+    const SvgDimension result = parse_dimension(MISSING_HEIGHT_FILE);
+    BOOST_TEST(result.width == 256);
+    BOOST_TEST(result.height == PROPERTY_IS_MISSING);
 }

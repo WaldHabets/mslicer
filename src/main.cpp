@@ -11,6 +11,7 @@
 #include <string.h>
 #include <iomanip>
 #include "argparse.hpp"
+#include "xml.hpp"
 
 #define TOTAL_MAP_DIM 7424
 #define PNG ".png "
@@ -74,6 +75,20 @@ int main(int argc, char* argv[])
 
     const std::string OUTPUT_DIR = options.output_dir;
     const std::string INPUT_FILE = options.input_file;
+
+    const SvgDimension dim = parse_dimension(INPUT_FILE);
+
+    if (options.input_width == 0 && dim.width == PROPERTY_IS_MISSING) {
+        std::cerr << "Aborting: Property 'width' is missing on the file and not passed as an argument" << std::endl;
+    } else if (options.input_width == 0) {
+        options.input_width = dim.width;
+    }
+
+    if (options.input_height == 0 && dim.height == PROPERTY_IS_MISSING) {
+        std::cerr << "Aborting: Property 'height' is missing on the file and not passed as an argument" << std::endl;
+    } else if (options.input_height == 0) {
+        options.input_height = dim.height;
+    }
 
     create_dir_if_missing(OUTPUT_DIR);
 
