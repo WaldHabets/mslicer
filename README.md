@@ -12,5 +12,7 @@ List of program dependencies
 - Boost
 
 ## External programs
-- Inkscape
-- Convert
+The tool depends on a few external programs to properly function. There are plans to remove these depedencies somewhere in the future.
+
+- Inkscape 
+- Convert _Currently required due to an issue with inkscape not properly exporting to .jpg_
