@@ -7,6 +7,7 @@
 #define ARG_ARCHIVE "archive,a"
 #define ARG_VERBOSE "verbose,v"
 #define ARG_FORMAT "format,f"
+#define ARG_ZOOM "zoom,z"
 #define ARG_MAX_ZOOM "max-zoom"
 #define ARG_MIN_ZOOM "min-zoom"
 #define ARG_TILE_DIM "tile-dim"
