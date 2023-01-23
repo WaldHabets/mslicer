@@ -1,4 +1,5 @@
 #include "argparse.hpp"
+#include "argparse_string.hpp"
 
 #include <iostream>
 #include <boost/program_options/cmdline.hpp>
@@ -9,8 +10,12 @@
 
 namespace po = boost::program_options;
 
-#define ARG_VALUE_INT po::value<int>()
-#define ARG_VALUE_STR po::value<std::string>()
+#define ARGTYPE_INT po::value<int>()
+#define ARGTYPE_STR po::value<std::string>()
+#define ARGTYPE_INT_DEFAULT(value) ARGTYPE_INT->default_value(value)
+#define ARGTYPE_STR_DEFAULT(value) ARGTYPE_INT->default_value(value)
+#define ARGTYPE_INT_REQUIRED ARGTYPE_INT->required()
+#define ARGTYPE_STR_REQUIRED ARGTYPE_STR->required()
 
 #define ERROR_GE_0(ARGUMENT) std::cerr << "Error: " << ARGUMENT << " must be greather than or equal to 0."
 
@@ -23,19 +28,19 @@ init_options()
     po::options_description description("Options");
 
     description.add_options()
-        (ARG_HELP, "Show help options")
-        (ARG_ARCHIVE, "Creates a compressed archive of the output images. This optios is the same as running `tar czf` on the output dir.")
-        (ARG_VERBOSE, "Show error messages")
-        (ARG_FORMAT, ARG_VALUE_STR->default_value(DEFAULT_FORMAT), "Format of the outputted tiles, either png or jpg.")
-        (ARG_ZOOM, ARG_VALUE_INT, "Overwrite --max-zoom and --min-zoom to the zoom level. Outputs tiles for a single zoom level.")
-        (ARG_MAX_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MAX_ZOOM), "The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom.")
-        (ARG_MIN_ZOOM, ARG_VALUE_INT->default_value(DEFAULT_MIN_ZOOM), "The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom.")
-        (ARG_TILE_DIM, ARG_VALUE_INT->default_value(DEFAULT_TILE_DIM), "The dimension of the generated tiles")
-        (ARG_INPUT_WIDTH, ARG_VALUE_INT->default_value(DEFAULT_INPUT_DIM), "Set the width of the input image. If neither --input-width or --input-dim is set or --input-width=0, the program will attempt to derive the width from the input image.")
-        (ARG_INPUT_HEIGHT, ARG_VALUE_INT->default_value(DEFAULT_INPUT_DIM), "Set the height of the input image. If neither --input-height or --input-dim is set or --input-height=0, the program will attempt to derive the height from the input image.")
-        (ARG_INPUT_DIM, ARG_VALUE_INT, "Set the dimension of the input image: overrides --input-width and --input-height.")
-        (ARG_INPUT_FILE, ARG_VALUE_STR->required(), "Input file in .svg format")
-        (ARG_OUTPUT_DIR, ARG_VALUE_STR->required(), "Name of the target directory where output should be stored")
+        (ARG_HELP,          /* Boolean */                           MSG_ARG_HELP)
+        (ARG_ARCHIVE,       /* Boolean */                           MSG_ARG_ARCHIVE)
+        (ARG_VERBOSE,       /* Boolean */                           MSG_ARG_VERBOSE)
+        (ARG_FORMAT,        ARGTYPE_INT_DEFAULT(DEFAULT_FORMAT),    MSG_ARG_FORMAT)
+        (ARG_ZOOM,          ARGTYPE_INT,                            MSG_ARG_ZOOM)
+        (ARG_MAX_ZOOM,      ARGTYPE_INT_DEFAULT(DEFAULT_MAX_ZOOM),  MSG_ARG_MAX_ZOOM)
+        (ARG_MIN_ZOOM,      ARGTYPE_INT_DEFAULT(DEFAULT_MIN_ZOOM),  MSG_ARG_MIN_ZOOM)
+        (ARG_TILE_DIM,      ARGTYPE_INT_DEFAULT(DEFAULT_TILE_DIM),  MSG_ARG_TILE_DIM)
+        (ARG_INPUT_WIDTH,   ARGTYPE_INT_DEFAULT(DEFAULT_INPUT_DIM), MSG_ARG_INPUT_WIDTH)
+        (ARG_INPUT_HEIGHT,  ARGTYPE_INT_DEFAULT(DEFAULT_INPUT_DIM), MSG_ARG_INPUT_HEIGHT)
+        (ARG_INPUT_DIM,     ARGTYPE_INT,                            MSG_ARG_INPUT_DIM)
+        (ARG_INPUT_FILE,    ARGTYPE_STR_REQUIRED,                   MSG_ARG_INPUT_FILE)
+        (ARG_OUTPUT_DIR,    ARGTYPE_STR_REQUIRED,                   MSG_ARG_OUTPUT_DIR)
         ;
     return description;
 }
