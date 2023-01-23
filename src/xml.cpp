@@ -43,28 +43,26 @@ SvgDimension parse_dimension(const std::string& path) {
     return dim;
 }
 
-void set_display(const std::string& path, const std::string& id, bool display = true) {
+void set_display(const std::string& path, const std::string& id, bool display) {
     pt::ptree root;
     pt::read_xml(path, root);
 
     const pt::ptree& groups = root.get_child("g");
 
-    BOOST_FOREACH(ptree::value_type& group, groups) 
-    {
-        const pt::ptree& attributes = group.second.get_child("<xmlattr>");
-        const std::string group_id = group.second.get<std::string>("<xmlattr>.id");
+    // BOOST_FOREACH(pt::value_type& group, groups) 
+    // {
+    //     const pt::ptree& attributes = group.second.get_child("<xmlattr>");
+    //     const std::string group_id = group.second.get<std::string>("<xmlattr>.id");
 
-        if (group_id.compare(id) == 0) {
-            
+    //     if (group_id.compare(id) == 0) {
+    //         std::string display_style = display ? "display:inline" : "display:none";
+    //         try {
+    //             const std::string style = group.second.get<std::string>("<xmlattr>.style");
 
-            std::string display_style = display ? "display:inline" : "display:none";
-            try {
-                const std::string style = group.second.get<std::string>("<xmlattr>.style");
-
-            } catch (boost::wrapexcept<boost::property_tree::ptree_bad_path>) {
-                const std::string style = display ? "display:inline" : "display:none";
+    //         } catch (boost::wrapexcept<boost::property_tree::ptree_bad_path>) {
+    //             const std::string style = display ? "display:inline" : "display:none";
                 
-            }
-        }
-    }
+    //         }
+    //     }
+    // }
 }
