@@ -10,8 +10,11 @@
 #include <errno.h>
 #include <string.h>
 #include <iomanip>
-#include <ctime>
 #include <chrono>
+// c headers
+#include <ctime>
+#include <csignal>
+// project headers
 #include "argparse.hpp"
 #include "filesystem.hpp"
 #include "progress_tracker.hpp"
@@ -41,8 +44,8 @@
 
 #define FORMAT_TIME(NANOSECONDS) TO_HOURS(NANOSECONDS) << TO_MINUTES(NANOSECONDS) << TO_SECONDS(NANOSECONDS)
 
-void execute(const std::stringstream& command) {
-    system(command.str().c_str());
+int execute(const std::stringstream& command) {
+    return system(command.str().c_str());
 }
 
 void convert_to_jpg(const std::string& file) {
@@ -79,8 +82,34 @@ std::string format_time(double nanoseconds) {
     return stream.str();
 }
 
+
+volatile bool ABORT = false;
+
+void interrupt_handler(sig_atomic_t s) {
+    ABORT = true;
+}
+
+
 int main(int argc, char* argv[])
 {
+    // Attempt to catch an interrupt event (aka ctrl-c)
+    // in order to set the ABORT flag
+    // so that the system can gracefully shut down
+    // However it seems that system() eats up
+    // interrupt events, therefore the bellow lines
+    // are useless
+    // TODO
+    //
+    //struct sigaction sig_interrupt_handler;
+    //
+    //sig_interrupt_handler.sa_handler = interrupt_handler;
+    //sigemptyset(&sig_interrupt_handler.sa_mask);
+    //sig_interrupt_handler.sa_flags = 0;
+    //
+    //sigaction(SIGINT, &sig_interrupt_handler, NULL);
+    //
+    // end interrupt handler code
+
 
     Options options = parse_args(argc, argv);
 
@@ -129,6 +158,8 @@ int main(int argc, char* argv[])
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
+        if (ABORT) continue;
+
         // const int chunksize = TOTAL_MAP_DIM / pow(2, z);
         // const int num_chunks = TOTAL_MAP_DIM / chunksize;
         // const float total = num_chunks * num_chunks;
@@ -142,12 +173,13 @@ int main(int argc, char* argv[])
 
         tracker.tick_zoom(total);
 
-        #pragma omp parallel for collapse(2)
+        #pragma omp parallel for collapse(2) shared(ABORT)
         for (int y = 0; y < num_chunks_y; ++y)
         {
 
             for (int x = 0; x < num_chunks_x; ++x)
             { 
+                if (ABORT) continue;
                 #pragma omp critical
                 {
                     tracker.tick();
@@ -186,15 +218,22 @@ int main(int argc, char* argv[])
                 else
                     cmd << std::endl;
 
-                execute(cmd);
-
-                // convert and remove
-                // We manually convert due to a bug in inkscape trowing
-                // ** (org.inkscape.Inkscape:87826): ERROR **: 15:43:29.594: 
-                //      unhandled exception (type unknown) in signal handler
-                // when we add jpg as the file extension to --export-filename
-                if (options.format.compare("jpg") == 0)
-                    convert_to_jpg(FILE);
+                int result = execute(cmd);
+                if (WSTOPSIG(result) == 0 || WEXITSTATUS(result) == 2) {
+                    // exit status might be 2 if ctrl-c is pressed
+                    // however, this is very much unreliable and there is no
+                    // guarantee that this works on all machines
+                    // TODO
+                    ABORT = true;
+                } else {
+                    // convert and remove
+                    // We manually convert due to a bug in inkscape trowing
+                    // ** (org.inkscape.Inkscape:87826): ERROR **: 15:43:29.594: 
+                    //      unhandled exception (type unknown) in signal handler
+                    // when we add jpg as the file extension to --export-filename
+                    if (options.format.compare("jpg") == 0)
+                        convert_to_jpg(FILE);
+                }
             }
         }
 
@@ -208,12 +247,17 @@ int main(int argc, char* argv[])
 
     tracker.tick();
     std::cout << "|-----------|-----------------------------------------------|-----------------|-----------------|" << std::endl << std::endl;
-    std::cout << "Slicing completed in " << FORMAT_TIME(tracker.get_elapsed_time()) << std::endl << std::endl;
 
-    if (options.archive)
-        create_tarball_of(OUTPUT_DIR);
+    if (!ABORT) {
+        std::cout << "Slicing completed in " << FORMAT_TIME(tracker.get_elapsed_time()) << std::endl << std::endl;
 
-    std::cout << "DONE" << std::endl;
+        if (options.archive)
+            create_tarball_of(OUTPUT_DIR);
+
+        std::cout << "DONE" << std::endl;
+    } else {
+        std::cout << "ABORTED" << std::endl;
+    }
 
     return 0;
 }
