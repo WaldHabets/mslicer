@@ -4,6 +4,8 @@ mSlicer is a command-line utility to export a vector drawing to rasterized [tile
 
 mSlicer differers from tools such as [mapnik](https://mapnik.org/) in that it takes a vector (.svg) drawing and that it slices that drawing to generate a static set of tiles at multiple zoom levels. mSlicer uses a multithreaded approuch to generate its tiles concurrently.
 
+![Preview](img/mslicer-preview.png)
+
 # Usage
 
 ⚠️ The slicer is designed to make full use of all availabe processing cores. Be aware that it will eat up all processing power.
