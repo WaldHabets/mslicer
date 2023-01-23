@@ -1,5 +1,5 @@
 #include "argparse.hpp"
-#include "argparse_string.hpp"
+#include "argparse_strings.hpp"
 
 #include <iostream>
 #include <boost/program_options/cmdline.hpp>
@@ -12,8 +12,8 @@ namespace po = boost::program_options;
 
 #define ARGTYPE_INT po::value<int>()
 #define ARGTYPE_STR po::value<std::string>()
-#define ARGTYPE_INT_DEFAULT(value) ARGTYPE_INT->default_value(value)
-#define ARGTYPE_STR_DEFAULT(value) ARGTYPE_INT->default_value(value)
+#define ARGTYPE_INT_DEFAULT(val) ARGTYPE_INT->default_value(val)
+#define ARGTYPE_STR_DEFAULT(val) ARGTYPE_STR->default_value(val)
 #define ARGTYPE_INT_REQUIRED ARGTYPE_INT->required()
 #define ARGTYPE_STR_REQUIRED ARGTYPE_STR->required()
 
@@ -31,7 +31,7 @@ init_options()
         (ARG_HELP,          /* Boolean */                           MSG_ARG_HELP)
         (ARG_ARCHIVE,       /* Boolean */                           MSG_ARG_ARCHIVE)
         (ARG_VERBOSE,       /* Boolean */                           MSG_ARG_VERBOSE)
-        (ARG_FORMAT,        ARGTYPE_INT_DEFAULT(DEFAULT_FORMAT),    MSG_ARG_FORMAT)
+        (ARG_FORMAT,        ARGTYPE_STR_DEFAULT(DEFAULT_FORMAT),    MSG_ARG_FORMAT)
         (ARG_ZOOM,          ARGTYPE_INT,                            MSG_ARG_ZOOM)
         (ARG_MAX_ZOOM,      ARGTYPE_INT_DEFAULT(DEFAULT_MAX_ZOOM),  MSG_ARG_MAX_ZOOM)
         (ARG_MIN_ZOOM,      ARGTYPE_INT_DEFAULT(DEFAULT_MIN_ZOOM),  MSG_ARG_MIN_ZOOM)
