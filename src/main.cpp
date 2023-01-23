@@ -11,6 +11,7 @@
 #include <string.h>
 #include <iomanip>
 #include "argparse.hpp"
+#include "filesystem.hpp"
 #include "xml.hpp"
 
 #define TOTAL_MAP_DIM 7424
@@ -27,12 +28,9 @@
 #define OPTION_EXPORT_TO(FILE) "--export-filename=" << FILE << PNG
 
 // Other
-#define Z_DIR(z) "/" << z << "/" 
 #define REMOVE_PNG(FILE) "rm " << FILE << PNG
 #define CONVERT_TO_JPG(FILE) "convert " << FILE << PNG << FILE << JPG
 #define FORMAT_FLOAT(FLOAT) std::fixed << std::setprecision(2) << FLOAT
-
-struct stat st = {0};
 
 void execute(const std::stringstream& command) {
     system(command.str().c_str());
@@ -50,22 +48,6 @@ void create_tarball_of(const std::string& dir) {
     command << "tar czf " << dir << ".tar.gz ";
     command << dir << std::endl;
     execute(command);
-}
-
-/**
- * Creates the target directory if it does not yet exists
- * */
-void create_dir_if_missing(const std::string& dir, bool verbose = true) {
-    const char* directory = dir.c_str();
-    if (stat(directory, &st) == -1)
-    {
-        int res = mkdir(directory, S_IRWXU);
-
-        if (verbose && res != 0)
-        {
-            std::cerr << strerror(errno) << std::endl;
-        }
-    }
 }
 
 int main(int argc, char* argv[])
@@ -90,16 +72,7 @@ int main(int argc, char* argv[])
         options.input_height = dim.height;
     }
 
-    create_dir_if_missing(OUTPUT_DIR);
-
-    for (int z = options.min_zoom; z <= options.max_zoom; ++z)
-    {
-        std::stringstream z_dir;
-
-        z_dir << OUTPUT_DIR << Z_DIR(z);
-
-        create_dir_if_missing(z_dir.str());
-    }
+    initialize_output_dirs(OUTPUT_DIR, options.min_zoom, options.max_zoom);
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
