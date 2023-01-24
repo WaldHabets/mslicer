@@ -46,7 +46,7 @@ init_options()
 }
 
 
-void exit_with_help(const po::options_description& description) {
+void exit_with_help(po::options_description const & description) {
     std::cout << description << std::endl;
     exit(1);
 }
@@ -55,7 +55,7 @@ void exit_with_help(const po::options_description& description) {
  * Take an constant and options of the form "long-option,short"
  * and returns the "long-option"
  * */
-std::string get_long_option(const char* option) {
+std::string get_long_option(char const * option) {
     char* option_copy = strdup(option);
     std::string long_option = strtok(option_copy, ",");
     free(option_copy);
@@ -65,11 +65,11 @@ std::string get_long_option(const char* option) {
 /**
  * Checks if the options exists on the value map
  * */
-bool check(const char* option, const po::variables_map* vm) {
+bool check(char const * option, po::variables_map const * vm) {
     return vm->count(get_long_option(option));
 }
 
-Options populate_options(const po::variables_map* vm) {
+Options populate_options(po::variables_map const * vm) {
     Options options;
 
     if (check(ARG_INPUT_DIM, vm) > 0) {
@@ -104,7 +104,7 @@ Options populate_options(const po::variables_map* vm) {
  * Validates the program options
  * @returns true if the options are valid
  * */
-bool validate_options(const Options& options) {
+bool validate_options(Options const & options) {
     if (options.input_height < 0) {
         ERROR_GE_0(get_long_option(ARG_INPUT_HEIGHT));
         return false;
@@ -136,7 +136,7 @@ bool validate_options(const Options& options) {
  * Parse the command line input and stores it into an Options struct
  * */
 Options
-parse_args(int argc, char* argv[]) 
+parse_args(int argc, char * argv[]) 
 {
     po::options_description description = init_options();
 

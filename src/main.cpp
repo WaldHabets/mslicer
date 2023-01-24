@@ -44,31 +44,31 @@
 
 #define FORMAT_TIME(NANOSECONDS) TO_HOURS(NANOSECONDS) << TO_MINUTES(NANOSECONDS) << TO_SECONDS(NANOSECONDS)
 
-int execute(const std::stringstream& command) {
+int execute(std::stringstream const & command) {
     return system(command.str().c_str());
 }
 
-void convert_to_jpg(const std::string& file) {
+void convert_to_jpg(std::string const & file) {
     std::stringstream command;
     command << CONVERT_TO_JPG(file) << NO_OUTPUT;
     command << " && " << REMOVE_PNG(file) << NO_OUTPUT << NO_ERROR << std::endl;
     execute(command);
 }
 
-void create_tarball_of(const std::string& dir) {
+void create_tarball_of(std::string const & dir) {
     std::stringstream command;
     command << "tar czf " << dir << ".tar.gz ";
     command << dir << std::endl;
     execute(command);
 }
 
-std::string format_active_zoom(double zoom, double max) {
+std::string format_active_zoom(double const zoom, double const max) {
     std::stringstream stream;
     stream << zoom << "/" << max;
     return stream.str();
 }
 
-std::string format_progress(double progress, double max, double percent) {
+std::string format_progress(double const progress, double const max, double const percent) {
     std::stringstream stream;
     stream << std::fixed << std::setprecision(0);
     stream << progress << " / " << max;
@@ -76,7 +76,7 @@ std::string format_progress(double progress, double max, double percent) {
     return stream.str();
 }
 
-std::string format_time(double nanoseconds) {
+std::string format_time(double const nanoseconds) {
     std::stringstream stream;
     stream << FORMAT_TIME(nanoseconds);
     return stream.str();
@@ -113,10 +113,10 @@ int main(int argc, char* argv[])
 
     Options options = parse_args(argc, argv);
 
-    const std::string OUTPUT_DIR = options.output_dir;
-    const std::string INPUT_FILE = options.input_file;
+    std::string const OUTPUT_DIR = options.output_dir;
+    std::string const INPUT_FILE = options.input_file;
 
-    const SvgDimension dim = parse_dimension(INPUT_FILE);
+    SvgDimension const dim = parse_dimension(INPUT_FILE);
 
     if (options.input_width == 0 && dim.width == PROPERTY_IS_MISSING) {
         std::cerr << "Aborting: Property 'width' is missing on the file and not passed as an argument" << std::endl;

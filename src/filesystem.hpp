@@ -13,7 +13,7 @@
 /**
  * Creates the target directory if it does not yet exists
  * */
-void create_dir_if_missing(const std::string& dir, bool verbose = true);
+void create_dir_if_missing(std::string const & dir, bool verbose = true);
 
 
 /**
@@ -23,7 +23,7 @@ void create_dir_if_missing(const std::string& dir, bool verbose = true);
  * ├─ ...
  * └─ max_zoom
  * */
-void initialize_output_dirs(const std::string& dir, const int min_zoom, const int max_zoom);
+void initialize_output_dirs(std::string const & dir, int const min_zoom, int const max_zoom);
 
 
 #endif // GUARD_FILESYSTEM_HPP

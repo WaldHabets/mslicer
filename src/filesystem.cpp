@@ -2,7 +2,7 @@
 
 struct stat status = {0};
 
-void initialize_output_dirs(const std::string& dir, const int min_zoom, const int max_zoom) 
+void initialize_output_dirs(std::string const & dir, int const min_zoom, int const max_zoom) 
 {
     create_dir_if_missing(dir);
 
@@ -16,7 +16,7 @@ void initialize_output_dirs(const std::string& dir, const int min_zoom, const in
     }
 }
 
-void create_dir_if_missing(const std::string& dir, bool verbose) 
+void create_dir_if_missing(std::string const & dir, bool verbose) 
 {
     const char* directory = dir.c_str();
     if (stat(directory, &status) == -1)
