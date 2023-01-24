@@ -15,12 +15,12 @@ public:
     void tick();
     void tick_zoom(double zoom_maximum);
 
-    double get_elapsed_time();
-    double get_estimated_time();
-    double get_total_progress_count();
-    double get_total_progress_percent();
-    double get_zoom_progress_count();
-    double get_zoom_progress_percent();
+    double get_elapsed_time() const;
+    double get_estimated_time() const;
+    double get_total_progress_count() const;
+    double get_total_progress_percent() const;
+    double get_zoom_progress_count() const;
+    double get_zoom_progress_percent() const;
 
 private:
 

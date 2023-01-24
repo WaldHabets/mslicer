@@ -22,22 +22,22 @@ void ProgressTracker::tick_zoom(double zoom_maximum) {
 }
 
 
-double ProgressTracker::get_elapsed_time() {
+double ProgressTracker::get_elapsed_time() const {
     return this->elapsed_time;
 }
-double ProgressTracker::get_estimated_time() {
+double ProgressTracker::get_estimated_time() const {
     double frac = this->maximum / this->progress;
     return frac * this->elapsed_time;
 }
-double ProgressTracker::get_total_progress_count() {
+double ProgressTracker::get_total_progress_count() const {
     return this->progress;
 }
-double ProgressTracker::get_total_progress_percent() {
+double ProgressTracker::get_total_progress_percent() const {
     return (this->progress / this->maximum) * 100;
 }
-double ProgressTracker::get_zoom_progress_count() {
+double ProgressTracker::get_zoom_progress_count() const {
     return this->zoom_progress;
 }
-double ProgressTracker::get_zoom_progress_percent() {
+double ProgressTracker::get_zoom_progress_percent() const {
     return (this->zoom_progress / this->zoom_maximum) * 100;
 }
