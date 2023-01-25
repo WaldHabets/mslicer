@@ -219,13 +219,13 @@ int main(int argc, char* argv[])
                     cmd << std::endl;
 
                 int result = execute(cmd);
-                if (WSTOPSIG(result) == 0 || WEXITSTATUS(result) == 2) {
+                // if (WSTOPSIG(result) == 0 || WEXITSTATUS(result) == 2) {
                     // exit status might be 2 if ctrl-c is pressed
                     // however, this is very much unreliable and there is no
                     // guarantee that this works on all machines
                     // TODO
-                    ABORT = true;
-                } else {
+                    // ABORT = true;
+                // } else {
                     // convert and remove
                     // We manually convert due to a bug in inkscape trowing
                     // ** (org.inkscape.Inkscape:87826): ERROR **: 15:43:29.594: 
@@ -233,7 +233,7 @@ int main(int argc, char* argv[])
                     // when we add jpg as the file extension to --export-filename
                     if (options.format.compare("jpg") == 0)
                         convert_to_jpg(FILE);
-                }
+                // }
             }
         }
 
