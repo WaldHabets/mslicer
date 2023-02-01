@@ -34,9 +34,9 @@ List of program dependencies
 ## Libraries
 - OpenMP
 - Boost
+- Librsvg
 
 ## External programs
 The tool depends on a few external programs to properly function. There are plans to remove these depedencies somewhere in the future.
 
-- Inkscape 
-- Convert _Currently required due to an issue with inkscape not properly exporting to .jpg_
+- Convert _Currently in order to export to .jpg_
