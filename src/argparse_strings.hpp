@@ -14,5 +14,9 @@
 #define MSG_ARG_INPUT_DIM       "Set the dimension of the input image: overrides --input-width and --input-height."
 #define MSG_ARG_INPUT_FILE      "Input file in .svg format"
 #define MSG_ARG_OUTPUT_DIR      "Name of the target directory where output should be stored"
+#define MSG_ARG_X_START         "Incase the input is part of a larger image, set the fraction of the x-coordinate were the partial image starts. Must be between 0 and 1, and smaller then --xend. Defaults to 0"
+#define MSG_ARG_Y_START         "Incase the input is part of a larger image, set the fraction of the y-coordinate were the partial image starts. Must be between 0 and 1, and smaller then --yend. Defaults to 0"
+#define MSG_ARG_X_END           "Incase the input is part of a larger image, set the fraction of the x-coordinate were the partial image ends. Must be between 0 and 1, and larger then --xstart. Defaults to 1"
+#define MSG_ARG_Y_END           "Incase the input is part of a larger image, set the fraction of the y-coordinate were the partial image ends. Must be between 0 and 1, and larger then --ystart. Defaults to 1"
 
 #endif // GUARD_ARGPARSE_STRINGS_HPP

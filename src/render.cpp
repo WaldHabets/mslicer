@@ -47,6 +47,7 @@ bool render(
   Viewport viewport,
   unsigned int output_dim
 ) {
+  bool has_error = 0;
   GError *error = NULL;
   RsvgHandle * svg = load_svg(in_path);
 
@@ -56,14 +57,15 @@ bool render(
   cairo_t *cr = cairo_create (surface);
 
   if (!rsvg_handle_render_document(svg, cr, &viewport, &error)) {
-    return 1;
+    has_error = 1;
+    g_printerr(error->message);
+  } else {
+    has_error = write_to_png(surface, out_path);
   }
-
-  write_to_png(surface, out_path);
 
   // Free memory
   cairo_destroy (cr);
   cairo_surface_destroy (surface);
   g_object_unref(svg);
-  return 0;
+  return has_error;
 }

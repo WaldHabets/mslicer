@@ -154,6 +154,9 @@ int main(int argc, char* argv[])
     std::cout << "|-----------|-----------------------------------------------|-----------------|-----------------|" << std::endl;
 
 
+    const int full_image_width = options.input_width * (1/(options.x_end - options.x_start));
+    const int full_image_height = options.input_height * (1/(options.y_end - options.y_start));
+
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
         if (ABORT) continue;
@@ -163,14 +166,21 @@ int main(int argc, char* argv[])
         // const float total = num_chunks * num_chunks;
         // int progress = 0;
 
-        const int chunksize_x = options.input_width / pow(2, z);
-        const int chunksize_y = options.input_height / pow(2, z);
+        
+        const int chunksize_x = full_image_width / pow(2, z);
+        const int chunksize_y = full_image_height / pow(2, z);
         const int num_chunks_x = options.input_width / chunksize_x;
         const int num_chunks_y = options.input_height / chunksize_y;
+        const int num_chunks_x_full_image = full_image_width / chunksize_x;
+        const int num_chunks_y_full_image = full_image_height / chunksize_y;
+        const int x_name_offset = num_chunks_x_full_image * options.x_start;
+        const int y_name_offset = num_chunks_y_full_image * options.y_start;
+
         const float total = num_chunks_x * num_chunks_y;
 
         const double canvas_x = options.tile_dim * num_chunks_x;
         const double canvas_y = options.tile_dim * num_chunks_y;
+        std::cout << canvas_x << std::endl;
 
         tracker.tick_zoom(total);
 
@@ -195,7 +205,7 @@ int main(int argc, char* argv[])
                 }
 
                 std::stringstream path_builder;
-                path_builder << OUTPUT_DIR << Z_DIR(z) << x << "_" << y; // extension gets appended at later stage
+                path_builder << OUTPUT_DIR << Z_DIR(z) << x_name_offset + x << "_" << y_name_offset + y; // extension gets appended at later stage
 
                 const std::string FILE = path_builder.str();
 
@@ -205,10 +215,12 @@ int main(int argc, char* argv[])
                     .width = canvas_x,
                     .height = canvas_y,
                 };
-                render(INPUT_FILE.c_str(), (FILE + ".png").c_str(), port, options.tile_dim);
+                bool error = render(INPUT_FILE.c_str(), (FILE + ".png").c_str(), port, options.tile_dim);
 
-                if (options.format.compare("jpg") == 0)
+                if (!error && options.format.compare("jpg") == 0)
                     convert_to_jpg(FILE);
+                else if (error)
+                    std::cerr << "Render error occured" << std::endl;
             }
         }
 

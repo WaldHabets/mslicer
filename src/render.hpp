@@ -7,6 +7,6 @@ typedef RsvgRectangle Viewport;
 
 RsvgHandle * load_svg(char const * path);
 
-void render(char const * in_path, char const * out_path, Viewport viewport, unsigned int output_dim);
+bool render(char const * in_path, char const * out_path, Viewport viewport, unsigned int output_dim);
 
 #endif // GUARD_RENDER_HPP

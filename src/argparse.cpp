@@ -12,12 +12,16 @@ namespace po = boost::program_options;
 
 #define ARGTYPE_INT po::value<int>()
 #define ARGTYPE_STR po::value<std::string>()
+#define ARGTYPE_FLOAT po::value<float>()
 #define ARGTYPE_INT_DEFAULT(val) ARGTYPE_INT->default_value(val)
 #define ARGTYPE_STR_DEFAULT(val) ARGTYPE_STR->default_value(val)
+#define ARGTYPE_FLOAT_DEFAULT(val) ARGTYPE_FLOAT->default_value(val)
 #define ARGTYPE_INT_REQUIRED ARGTYPE_INT->required()
 #define ARGTYPE_STR_REQUIRED ARGTYPE_STR->required()
 
 #define ERROR_GE_0(ARGUMENT) std::cerr << "Error: " << ARGUMENT << " must be greather than or equal to 0."
+
+#define BETWEEN_0_AND_1(val) (val < 0 || val > 1)
 
 /**
  * Builds the options descriptions
@@ -41,6 +45,10 @@ init_options()
         (ARG_INPUT_DIM,     ARGTYPE_INT,                            MSG_ARG_INPUT_DIM)
         (ARG_INPUT_FILE,    ARGTYPE_STR_REQUIRED,                   MSG_ARG_INPUT_FILE)
         (ARG_OUTPUT_DIR,    ARGTYPE_STR_REQUIRED,                   MSG_ARG_OUTPUT_DIR)
+        (ARG_X_START,       ARGTYPE_FLOAT_DEFAULT(DEFAULT_START),   MSG_ARG_X_START)
+        (ARG_Y_START,       ARGTYPE_FLOAT_DEFAULT(DEFAULT_START),   MSG_ARG_Y_START)
+        (ARG_X_END,         ARGTYPE_FLOAT_DEFAULT(DEFAULT_END),     MSG_ARG_X_END)
+        (ARG_Y_END,         ARGTYPE_FLOAT_DEFAULT(DEFAULT_END),     MSG_ARG_Y_END)
         ;
     return description;
 }
@@ -97,6 +105,11 @@ Options populate_options(po::variables_map const * vm) {
     options.input_file = (*vm)[get_long_option(ARG_INPUT_FILE)].as<std::string>();
     options.output_dir = (*vm)[get_long_option(ARG_OUTPUT_DIR)].as<std::string>();
 
+    options.x_start = (*vm)[get_long_option(ARG_X_START)].as<float>();
+    options.y_start = (*vm)[get_long_option(ARG_Y_START)].as<float>();
+    options.x_end = (*vm)[get_long_option(ARG_X_END)].as<float>();
+    options.y_end = (*vm)[get_long_option(ARG_Y_END)].as<float>();
+
     return options;
 }
 
@@ -105,31 +118,56 @@ Options populate_options(po::variables_map const * vm) {
  * @returns true if the options are valid
  * */
 bool validate_options(Options const & options) {
+    bool isValid = true;
     if (options.input_height < 0) {
         ERROR_GE_0(get_long_option(ARG_INPUT_HEIGHT));
-        return false;
+        isValid = false;
     }
     if (options.input_width < 0) {
         ERROR_GE_0(get_long_option(ARG_INPUT_WIDTH));
-        return false;
+        isValid = false;
     }
     if (options.min_zoom < 0) {
         ERROR_GE_0(get_long_option(ARG_MIN_ZOOM));
-        return false;
+        isValid = false;
     }
     if (options.max_zoom < 0) {
         ERROR_GE_0(get_long_option(ARG_MAX_ZOOM));
-        return false;
+        isValid = false;
+    }
+    if BETWEEN_0_AND_1(options.x_start) {
+        std::cerr << "Error: value of --xstart must be between 0 and 1, current value is " << options.x_start << std::endl;
+        isValid = false;
+    }
+    if BETWEEN_0_AND_1(options.y_start) {
+        std::cerr << "Error: value of --ystart must be between 0 and 1" << std::endl;
+        isValid = false;
+    }
+    if BETWEEN_0_AND_1(options.x_end) {
+        std::cerr << "Error: value of --xend must be between 0 and 1" << std::endl;
+        isValid = false;
+    }
+    if BETWEEN_0_AND_1(options.y_end) {
+        std::cerr << "Error: value of --yend must be between 0 and 1" << std::endl;
+        isValid = false;
+    }
+    if (options.x_start >= options.x_end) {
+        std::cerr << "Error: value of --xstart (" << options.x_start << ") must be less then --xend (" << options.x_end << ")" << std::endl;
+        isValid = false;
+    }
+    if (options.y_start >= options.y_end) {
+        std::cerr << "Error: value of --ystart must be less then --yend" << std::endl;
+        isValid = false;
     }
     if (options.max_zoom < options.min_zoom) {
         std::cerr << "Error: " << get_long_option(ARG_MAX_ZOOM) << " must be greather than or equal to " << get_long_option(ARG_MIN_ZOOM);
-        return false;
+        isValid = false;
     }
     if (!(options.format.compare("jpg") || options.format.compare("png"))) {
         std::cerr << "Error: " << get_long_option(ARG_FORMAT) << " must be either png or jpg.";
-        return false;
+        isValid = false;
     }
-    return true;
+    return isValid;
 }
 
 /**

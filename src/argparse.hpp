@@ -16,12 +16,18 @@
 #define ARG_INPUT_DIM "input-dim"
 #define ARG_INPUT_FILE "input-file,i"
 #define ARG_OUTPUT_DIR "output-dir,o"
+#define ARG_X_START "xstart"
+#define ARG_Y_START "ystart"
+#define ARG_X_END "xend"
+#define ARG_Y_END "yend"
 
 #define DEFAULT_FORMAT "jpg"
 #define DEFAULT_MIN_ZOOM 0
 #define DEFAULT_MAX_ZOOM 2
 #define DEFAULT_TILE_DIM 512
 #define DEFAULT_INPUT_DIM 0
+#define DEFAULT_START 0
+#define DEFAULT_END 1
 
 struct options {
     bool archive;
@@ -32,6 +38,10 @@ struct options {
     int tile_dim;
     int input_width;
     int input_height;
+    float x_start;
+    float y_start;
+    float x_end;
+    float y_end;
     std::string input_file;
     std::string output_dir;
 } typedef Options;
