@@ -223,7 +223,7 @@ int main(int argc, char* argv[])
                 if (!error && options.format.compare("jpg") == 0)
                     convert_to_jpg(FILE);
                 else if (error)
-                    std::cerr << "Render error occured" << std::endl;
+                    std::cerr << "Render error occured, conversion skipped" << std::endl;
             }
         }
 
