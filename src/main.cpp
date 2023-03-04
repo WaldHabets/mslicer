@@ -130,12 +130,15 @@ int main(int argc, char* argv[])
 
     initialize_output_dirs(OUTPUT_DIR, options.min_zoom, options.max_zoom);
 
+    const int full_image_width = options.input_width * (1/(options.x_end - options.x_start));
+    const int full_image_height = options.input_height * (1/(options.y_end - options.y_start));
+
     // Pre Calculation to help determine time
     int total_chunks = 0;
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
-        const int chunksize_x = options.input_width / pow(2, z);
-        const int chunksize_y = options.input_height / pow(2, z);
+        const int chunksize_x = full_image_width / pow(2, z);
+        const int chunksize_y = full_image_height / pow(2, z);
         const int num_chunks_x = options.input_width / chunksize_x;
         const int num_chunks_y = options.input_height / chunksize_y;
         total_chunks += num_chunks_x * num_chunks_y;
