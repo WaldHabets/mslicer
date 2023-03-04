@@ -183,7 +183,6 @@ int main(int argc, char* argv[])
 
         const double canvas_x = options.tile_dim * num_chunks_x;
         const double canvas_y = options.tile_dim * num_chunks_y;
-        std::cout << canvas_x << std::endl;
 
         tracker.tick_zoom(total);
 
