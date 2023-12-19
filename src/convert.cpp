@@ -1,21 +1,21 @@
 #include "convert.hpp"
-#include <wand/magick_wand.h>
+//#include <wand/magick_wand.h>
 
 void convert(std::string const & from, std::string const & to) {
-    MagickWand *mw = NULL;
+    //MagickWand *mw = NULL;
 
-	MagickWandGenesis();
+	//MagickWandGenesis();
 
 	/* Create a wand */
-	mw = NewMagickWand();
+	//mw = NewMagickWand();
 
 	/* Read the input image */
-	MagickReadImage(mw, from.c_str());
+	//MagickReadImage(mw, from.c_str());
 	/* write it */
-	MagickWriteImage(mw, to.c_str());
+	//MagickWriteImage(mw, to.c_str());
 
 	/* Tidy up */
-	if(mw) mw = DestroyMagickWand(mw);
+	//if(mw) mw = DestroyMagickWand(mw);
 
-	MagickWandTerminus();
+	//MagickWandTerminus();
 }
