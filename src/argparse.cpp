@@ -163,8 +163,8 @@ bool validate_options(Options const & options) {
         std::cerr << "Error: " << get_long_option(ARG_MAX_ZOOM) << " must be greather than or equal to " << get_long_option(ARG_MIN_ZOOM);
         isValid = false;
     }
-    if (!(options.format.compare("jpg") || options.format.compare("png"))) {
-        std::cerr << "Error: " << get_long_option(ARG_FORMAT) << " must be either png or jpg.";
+    if (!(options.format.compare("jpg") || options.format.compare("png") || options.format.compare("webp"))) {
+        std::cerr << "Error: " << get_long_option(ARG_FORMAT) << " must be either png, jpg or webp.";
         isValid = false;
     }
     return isValid;

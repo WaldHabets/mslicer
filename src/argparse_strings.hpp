@@ -4,7 +4,7 @@
 #define MSG_ARG_HELP            "Show help options"
 #define MSG_ARG_ARCHIVE         "Creates a compressed archive of the output images. This optios is the same as running `tar czf` on the output dir."
 #define MSG_ARG_VERBOSE         "Show error messages"
-#define MSG_ARG_FORMAT          "Format of the outputted tiles, either png or jpg."
+#define MSG_ARG_FORMAT          "Format of the outputted tiles, either png, jpg or webp."
 #define MSG_ARG_ZOOM            "Overwrite --max-zoom and --min-zoom to the zoom level. Outputs tiles for a single zoom level."
 #define MSG_ARG_MAX_ZOOM        "The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom."
 #define MSG_ARG_MIN_ZOOM        "The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom."

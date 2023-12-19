@@ -1,4 +1,5 @@
-CC=g++
+CXX=g++
+CXXFLAGS= -std=c++11
 CFLAGS= $(shell pkg-config --cflags librsvg-2.0)
 SRC_DIR=src
 OBJ_DIR=obj
@@ -15,10 +16,10 @@ $(info ${OBJS})
 LIBS=-fopenmp -lboost_program_options $(shell pkg-config --libs librsvg-2.0)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(DEPS) $(OBJ_DIR)
-	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -c -o $@ $< $(CFLAGS) $(LIBS)
 
 $(DIST)/${DIST_NAME}: $(OBJS) $(DIST)
-	$(CC) -o $@ $(OBJS) $(LIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS) $(LIBS)
 
 $(DIST):
 	mkdir -p $@

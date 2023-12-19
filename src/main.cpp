@@ -23,6 +23,7 @@
 
 #define PNG ".png "
 #define JPG ".jpg "
+#define WEBP ".webp "
 #define NO_OUTPUT " >/dev/null"
 #define NO_ERROR " 2>/dev/null"
 
@@ -36,6 +37,7 @@
 // Other
 #define REMOVE_PNG(FILE) "rm " << FILE << PNG
 #define CONVERT_TO_JPG(FILE) "convert " << FILE << PNG << FILE << JPG
+#define CONVERT_TO_WEBP(FILE) "convert " << FILE << PNG << FILE << WEBP
 #define FORMAT_FLOAT(FLOAT) std::fixed << std::setprecision(0) << FLOAT
 
 #define TO_SECONDS(NANOSECONDS) std::fixed << std::setprecision(0) << int(NANOSECONDS / 1000000000) % 60 << "s"
@@ -53,6 +55,20 @@ void convert_to_jpg(std::string const & file) {
     command << CONVERT_TO_JPG(file) << NO_OUTPUT;
     command << " && " << REMOVE_PNG(file) << NO_OUTPUT << NO_ERROR << std::endl;
     execute(command);
+}
+
+void convert_to_webp(std::string const & file) {
+    std::stringstream command;
+    command << CONVERT_TO_WEBP(file) << NO_OUTPUT;
+    command << " && " << REMOVE_PNG(file) << NO_OUTPUT << NO_ERROR << std::endl;
+    execute(command);
+}
+
+std::string remove_trailing_slash(std::string dir) {
+    if (dir.size() > 0 && dir.back() == '/') {
+        dir.pop_back();
+    }
+    return dir;
 }
 
 void create_tarball_of(std::string const & dir) {
@@ -156,10 +172,6 @@ int main(int argc, char* argv[])
     std::cout << "| Nr.       | Status                                        | Elapsed Time    | Estimated Time  |" << std::endl;
     std::cout << "|-----------|-----------------------------------------------|-----------------|-----------------|" << std::endl;
 
-
-    const int full_image_width = options.input_width * (1/(options.x_end - options.x_start));
-    const int full_image_height = options.input_height * (1/(options.y_end - options.y_start));
-
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
     {
         if (ABORT) continue;
@@ -183,6 +195,7 @@ int main(int argc, char* argv[])
 
         const double canvas_x = options.tile_dim * num_chunks_x;
         const double canvas_y = options.tile_dim * num_chunks_y;
+        std::cout << "canvas size: " << (int)canvas_x << ":" << (int)canvas_y << std::endl;
 
         tracker.tick_zoom(total);
 
@@ -221,6 +234,8 @@ int main(int argc, char* argv[])
 
                 if (!error && options.format.compare("jpg") == 0)
                     convert_to_jpg(FILE);
+                else if (!error && options.format.compare("webp") == 0)
+                    convert_to_webp(FILE);
                 else if (error)
                     std::cerr << "Render error occured, conversion skipped" << std::endl;
             }
