@@ -15,7 +15,7 @@ mSlicer differers from tools such as [mapnik](https://mapnik.org/) in that it ta
 | -?, --help               | Show help options | 
 | -a, --archive            | Creates a compressed archive of the output images. This optios is the same as running `tar czf` on the output dir.| 
 | -v, --verbose            | Show error messages |
-| -f, --format (=jpg)      | Format of the outputted tiles, either png or jpg. |
+| -f, --format (=jpg)      | Format of the outputted tiles, either png, jpg or webp. |
 | -z, --zoom               | Overwrite --max-zoom and --min-zoom to the zoom level. Outputs tiles for a single zoom level. |
 | --max-zoom (=2)          | The maximum zoom level, must be larger than or equal to 0 and more than --min-zoom. |
 | --min-zoom (=0)          | The minimum zoom level, must be larger than or equal to 0 and less than --max-zoom. |
