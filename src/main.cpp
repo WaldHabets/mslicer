@@ -37,7 +37,7 @@
 // Other
 #define REMOVE_PNG(FILE) "rm " << FILE << PNG
 #define CONVERT_TO_JPG(FILE) "convert " << FILE << PNG << FILE << JPG
-#define CONVERT_TO_WEBP(FILE) "convert " << FILE << PNG << FILE << WEBP
+#define CONVERT_TO_WEBP(FILE) "convert " << FILE << PNG << "-quality 100 -define webp:lossless=true " << FILE << WEBP
 #define FORMAT_FLOAT(FLOAT) std::fixed << std::setprecision(0) << FLOAT
 
 #define TO_SECONDS(NANOSECONDS) std::fixed << std::setprecision(0) << int(NANOSECONDS / 1000000000) % 60 << "s"
