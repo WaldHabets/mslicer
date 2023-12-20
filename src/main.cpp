@@ -92,6 +92,13 @@ std::string format_progress(double const progress, double const max, double cons
     return stream.str();
 }
 
+std::string format_canvas_size(double const x, double const y) {
+    std::stringstream stream;
+    stream << std::fixed << std::setprecision(0);
+    stream << "cairo canvas size: " << (int)x << ":" << (int)y;
+    return stream.str();
+}
+
 std::string format_time(double const nanoseconds) {
     std::stringstream stream;
     stream << FORMAT_TIME(nanoseconds);
@@ -160,16 +167,17 @@ int main(int argc, char* argv[])
         total_chunks += num_chunks_x * num_chunks_y;
     }
 
-
     ProgressTracker tracker;// = new ProgressTracker();
     tracker.start(total_chunks);
 
-    std::cout << "Slicing " << INPUT_FILE << std::endl;
-    std::cout << "Zoom        : " << options.min_zoom << " - " << options.max_zoom << std::endl;
-    std::cout << "Total chunks: " << total_chunks << std::endl << std::endl;
+    std::cout << "Slicing      : " << INPUT_FILE << std::endl;
+    std::cout << "Zoom         : " << options.min_zoom << " - " << options.max_zoom << std::endl;
+    std::cout << "Total chunks : " << total_chunks << std::endl << std::endl;
 
-    std::cout << "| Zoom                                                      | Total                             |" << std::endl;
-    std::cout << "| Nr.       | Status                                        | Elapsed Time    | Estimated Time  |" << std::endl;
+    std::cout << "You can abbort by pressing “ctrl+c”. Abortion may take a while." << std::endl << std::endl;
+
+    std::cout << "|           |                                               | Total           |                 |" << std::endl;
+    std::cout << "| Zoom Lvl. | Status                                        | Elapsed Time    | Estimated Time  |" << std::endl;
     std::cout << "|-----------|-----------------------------------------------|-----------------|-----------------|" << std::endl;
 
     for (int z = options.min_zoom; z <= options.max_zoom; ++z)
@@ -195,7 +203,15 @@ int main(int argc, char* argv[])
 
         const double canvas_x = options.tile_dim * num_chunks_x;
         const double canvas_y = options.tile_dim * num_chunks_y;
-        std::cout << "canvas size: " << (int)canvas_x << ":" << (int)canvas_y << std::endl;
+        //std::cout << "canvas size: " << (int)canvas_x << ":" << (int)canvas_y << std::endl;
+
+        std::cout
+            << std::setprecision(0)
+            << "| " << std::setw(9) << std::left << format_active_zoom(z, options.max_zoom)
+            << " | " << std::setw(45) << std::left << format_canvas_size(canvas_x, canvas_y)
+            << " | " << std::setw(15) << std::left << ""
+            << " | " << std::setw(15) << std::left << "" << " |\n"
+            << std::flush;
 
         tracker.tick_zoom(total);
 
@@ -212,7 +228,7 @@ int main(int argc, char* argv[])
 
                     std::cout
                         << std::setprecision(0)
-                        << "| " << std::setw(9) << std::left << format_active_zoom(z, options.max_zoom)
+                        << "| " << std::setw(9) << std::left << ""
                         << " | " << std::setw(45) << std::left << format_progress(tracker.get_zoom_progress_count(), total, tracker.get_zoom_progress_percent())
                         << " | " << std::setw(15) << std::left << format_time(tracker.get_elapsed_time())
                         << " | " << std::setw(15) << std::left << format_time(tracker.get_estimated_time()) << " |\r"
@@ -243,9 +259,9 @@ int main(int argc, char* argv[])
 
         std::cout
             << std::setprecision(0)
-            << "| " << std::setw(9) << std::left << format_active_zoom(z, options.max_zoom)
+            << "| " << std::setw(9) << std::left << ""
             << " | " << std::setw(45) << std::left << format_progress(total, total, 100)
-            << " | " << std::setw(15) << std::left << "" << " | " << std::setw(15) << std::left << "" << " |"
+            << " | " << std::setw(15) << std::left << format_time(tracker.get_elapsed_time()) << " | " << std::setw(15) << std::left << "" << " |"
             << std::endl;
     }
 
