@@ -1,8 +1,8 @@
 ![Banner](img/mslicer-banner.png)
 
-mSlicer is a command-line utility to export a vector drawing to rasterized [tiles](https://wiki.openstreetmap.org/wiki/Tiles). These square bitmap graphics can susequently be displayed in a grid arrangement by tools such as [Leaflet.js](https://leafletjs.com/) or [OpenLayers](https://openlayers.org/) to show a map or verry large image.
+mSlicer is a command-line utility to export a vector drawing to rasterized [tiles](https://wiki.openstreetmap.org/wiki/Tiles). These square bitmap graphics can subsequently be displayed in a grid arrangement by tools such as [Leaflet.js](https://leafletjs.com/) or [OpenLayers](https://openlayers.org/) to show a map or very large image.
 
-mSlicer differers from tools such as [mapnik](https://mapnik.org/) in that it takes a vector (.svg) drawing and that it slices that drawing to generate a static set of tiles at multiple zoom levels. mSlicer uses a multithreaded approuch to generate its tiles concurrently.
+mSlicer differers from tools such as [mapnik](https://mapnik.org/) in that it takes a vector (.svg) drawing and that it slices that drawing to generate a static set of tiles at multiple zoom levels. mSlicer uses a multithreaded approach to generate its tiles concurrently.
 
 ![Preview](img/mslicer-preview.png)
 
@@ -32,9 +32,9 @@ mSlicer differers from tools such as [mapnik](https://mapnik.org/) in that it ta
 List of program dependencies
 
 ## Libraries
-- OpenMP
-- Boost
-- Librsvg
+- [OpenMP](https://www.openmp.org/)
+- [Boost](https://www.boost.org/)
+- [Librsvg](https://gitlab.gnome.org/GNOME/librsvg)
 
 ## External programs
 The tool depends on a few external programs to properly function. There are plans to remove these depedencies somewhere in the future.
